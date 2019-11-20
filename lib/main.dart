@@ -44,24 +44,58 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin{
+class JumpingCurve extends Curve {
   @override
+  double transformInternal(double t) {
+    if(t <= 0.20){
+      return (t * 5);
+    }
+    else if(t > 0.20 && t < 0.40){
+      return 2 - (t * 5);
+    }
+    else if (t > 0.40){
+      return 0;
+    }
+  }
+}
+
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin{
+ @override
+  AnimationController controller;
+ Animation<double> animation;
 
 
+ CurvedAnimation animation1;
 
+ bool isBeginning = false;
   void initState() {
-    // TODO: implement initState
-    Animation<double> animation;
-    AnimationController controller;
+    controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+    );
+
+    animation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(controller);
+
+    animation1 = CurvedAnimation(parent: controller, curve: JumpingCurve());
+
+    controller.repeat(
+    );
 
     super.initState();
   }
 
-  //controller = AnimationController(duration: const Duration(seconds: 2), vsync: this);
-  Tween tween = Tween<Offset>(begin: Offset(0, -0.5), end: Offset(0, 0));
+  //final controller = AnimationController(duration: const Duration(seconds: 2), vsync: this);
 
   @override
+
   Widget build(BuildContext context) {
+    CurvedAnimation animation1 = CurvedAnimation(parent: controller, curve: JumpingCurve());
+
+    Animation<Offset> offsetAnimation = Tween<Offset>(begin: Offset(0,0), end: Offset(0,-1)).animate(animation1);
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -80,46 +114,44 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin{
                 color: Colors.grey.withAlpha(100),
                 borderRadius: BorderRadius.circular(64.0),
               ),
-              child: Animator(
-                tween: tween,
-                duration: Duration(seconds: 2),
-                cycles: 0,
-                builder: (anim)=>FractionalTranslation(
-                  translation: Offset (-1, 0),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 64, 0, 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Container(
-                            width: 25,
-                            height: 25,
-                            decoration: BoxDecoration(
-                              color: Colors.black54,
-                              borderRadius: BorderRadius.circular(80.0),
-                            ),
-                          ),
-                          Container(
-                            width: 25,
-                            height: 25,
-                            decoration: BoxDecoration(
-                              color: Colors.black54,
-                              borderRadius: BorderRadius.circular(80.0),
-                            ),
-                          ),
-                          Container(
-                            width: 25,
-                            height: 25,
-                            decoration: BoxDecoration(
-                              color: Colors.black54,
-                              borderRadius: BorderRadius.circular(80.0),
-                            ),
-                          ),
-                        ],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  SlideTransition(
+                    position: offsetAnimation,
+                    child: Container(
+                      width: 25,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.circular(80.0),
                       ),
                     ),
-                ),
-              ),
+                  ),
+                  SlideTransition(
+                    position: offsetAnimation,
+                    child: Container(
+                      width: 25,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.circular(80.0),
+                      ),
+                    ),
+                  ),
+                  SlideTransition(
+                    position: offsetAnimation,
+                    child: Container(
+                      width: 25,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.circular(80.0),
+                      ),
+                    ),
+                  ),
+                ],
+              )
               ),
           
           ],
