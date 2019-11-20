@@ -48,10 +48,10 @@ class JumpingCurve extends Curve {
   @override
   double transformInternal(double t) {
     if(t <= 0.20){
-      return (t * 5);
+      return Curves.linear.transformInternal(t * 5);
     }
     else if(t > 0.20 && t < 0.40){
-      return 2 - (t * 5);
+      return 1 - (Curves.linear.transformInternal(t * 5) - 1);
     }
     else if (t > 0.40){
       return 0;
