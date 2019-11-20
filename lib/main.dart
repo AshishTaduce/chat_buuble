@@ -1,4 +1,3 @@
-import 'package:animator/animator.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -45,22 +44,36 @@ class MyHomePage extends StatefulWidget {
 }
 
 class JumpingCurve extends Curve {
+  double begin;
+  double end;
+  JumpingCurve(this.begin, this.end);
+
   @override
+
   double transformInternal(double t) {
-    if(t <= 0.20){
-      return Curves.linear.transformInternal(t * 5);
+
+//    begin = begin * 10;
+//    end = end * 10;
+//    t = t * 10;
+    double half = (begin + end) / 2;
+
+    if (t >= begin && t <= half) {
+      return ((t - begin) / (half - begin));
     }
-    else if(t > 0.20 && t < 0.40){
-      return 1 - (Curves.linear.transformInternal(t * 5) - 1);
+
+    else if (t > half && t < end) {
+      return ((end - t) / (end - half));
     }
-    else if (t > 0.40){
+
+    else {
       return 0;
     }
   }
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin{
- @override
+
+
   AnimationController controller;
  Animation<double> animation;
 
@@ -79,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin{
       end: 1.0,
     ).animate(controller);
 
-    animation1 = CurvedAnimation(parent: controller, curve: JumpingCurve());
+    //animation1 = CurvedAnimation(parent: controller, curve: JumpingCurve());
 
     controller.repeat(
     );
@@ -92,9 +105,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin{
   @override
 
   Widget build(BuildContext context) {
-    CurvedAnimation animation1 = CurvedAnimation(parent: controller, curve: JumpingCurve());
+    //CurvedAnimation animation1 = CurvedAnimation(parent: controller, curve: JumpingCurve());
 
-    Animation<Offset> offsetAnimation = Tween<Offset>(begin: Offset(0,0), end: Offset(0,-1)).animate(animation1);
+    //Animation<Offset> offsetAnimation = Tween<Offset>(begin: Offset(0,0), end: Offset(0,-1)).animate(animation1);
 
     return Scaffold(
       appBar: AppBar(
@@ -118,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin{
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   SlideTransition(
-                    position: offsetAnimation,
+                    position: Tween<Offset>(begin: Offset(0,0), end: Offset(0,-1)).animate(CurvedAnimation(parent: controller, curve: JumpingCurve(0.0, 0.4))),
                     child: Container(
                       width: 25,
                       height: 25,
@@ -129,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin{
                     ),
                   ),
                   SlideTransition(
-                    position: offsetAnimation,
+                    position: Tween<Offset>(begin: Offset(0,0), end: Offset(0,-1)).animate(CurvedAnimation(parent: controller, curve: JumpingCurve(0.1, 0.5))),
                     child: Container(
                       width: 25,
                       height: 25,
@@ -140,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin{
                     ),
                   ),
                   SlideTransition(
-                    position: offsetAnimation,
+                    position: Tween<Offset>(begin: Offset(0,0), end: Offset(0,-1)).animate(CurvedAnimation(parent: controller, curve: JumpingCurve(0.2, 0.6))),
                     child: Container(
                       width: 25,
                       height: 25,
