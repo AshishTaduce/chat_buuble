@@ -44,6 +44,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class JumpingCurve extends Curve {
+
   double begin;
   double end;
   JumpingCurve(this.begin, this.end);
@@ -51,10 +52,10 @@ class JumpingCurve extends Curve {
   @override
 
   double transformInternal(double t) {
-
-//    begin = begin * 10;
-//    end = end * 10;
-//    t = t * 10;
+    //Division  by 100 shifts them to base 8, or something
+    begin = begin / 100;
+    end = end /100;
+    t = t /100;
     double half = (begin + end) / 2;
 
     if (t >= begin && t <= half) {
