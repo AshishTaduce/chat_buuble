@@ -53,9 +53,9 @@ class JumpingCurve extends Curve {
 
   double transformInternal(double t) {
     //Division  by 100 shifts them to base 8, or something
-    begin = begin / 100;
-    end = end /100;
-    t = t /100;
+//    begin = begin / 100;
+//    end = end /100;
+//    t = t /100;
     double half = (begin + end) / 2;
 
     if (t >= begin && t <= half) {
